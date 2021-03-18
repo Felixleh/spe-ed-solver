@@ -139,7 +139,6 @@ public class Viewer implements IViewer {
 				}
 			}
 		}
-		System.out.println("saved");
 	}
 
 }
