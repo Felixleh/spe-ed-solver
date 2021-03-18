@@ -35,7 +35,7 @@ public class Viewer implements IViewer {
 	 * @param playerType a String representation of the Player-Type
 	 */
 	public Viewer(final String playerType) {
-		this.window = new ViewerWindow(this::showRound, this::saveSlice, playerType);
+		this.window = new ViewerWindow(this::showRound, this::saveSlice, this::saveAllSlices, playerType);
 	}
 
 	/**
@@ -119,6 +119,27 @@ public class Viewer implements IViewer {
 				ApplicationLogger.logWarning("Image of slice could not be saved!");
 			}
 		}
+	}
+
+	/**
+	 * Saves all stored slice to a specified {@link File}.
+	 * 
+	 * @param file {@link File} to save the slice data to
+	 */
+	private void saveAllSlices(final File file) {
+		for (int i = 0; i < slices.size(); i++) {
+			ViewerSlice slice = slices.get(i);
+			for (final NamedImage image : slice.getImages()) {
+				try {
+					imageSavingService.saveImage(file, image, "-" + i);
+				} catch (final ImageSavingException e) {
+					window.showErrorMessage(e.getMessage());
+					ApplicationLogger.logException(e, LoggingLevel.WARNING);
+					ApplicationLogger.logWarning("Image of slice could not be saved!");
+				}
+			}
+		}
+		System.out.println("saved");
 	}
 
 }

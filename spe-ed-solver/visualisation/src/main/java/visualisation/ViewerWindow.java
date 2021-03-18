@@ -35,6 +35,7 @@ import utility.game.player.PlayerAction;
 public class ViewerWindow {
 
 	private static final String SAVE_BUTTON_NAME = "SAVE SLICE";
+	private static final String SAVE_ALL_BUTTON_NAME = "SAVE ALL";
 
 	private static final int MIN_WINDOW_WIDTH = 700;
 	private static final int MIN_WINDOW_HEIGHT = 500;
@@ -66,13 +67,15 @@ public class ViewerWindow {
 	 * @param timelineChangeHandler a handler called when the time line changes and
 	 *                              information of an other round should be
 	 *                              displayed.
-	 * @param playerType            a String representation of the Player-Type
-	 *                              represented by this {@link ViewerWindow}
 	 * @param saveSliceHandler      the {@link Consumer} to save {@link File files}
 	 *                              of {@link ViewerSlice slices}.
+	 * @param saveSlicesHandler     the {@link Consumer} to save {@link File files}
+	 *                              of all stored {@link ViewerSlice slices}.
+	 * @param playerType            a String representation of the Player-Type
+	 *                              represented by this {@link ViewerWindow}
 	 */
 	public ViewerWindow(final IntConsumer timelineChangeHandler, final Consumer<File> saveSliceHandler,
-			final String playerType) {
+			final Consumer<File> saveSlicesHandler, final String playerType) {
 
 		// main panel of the whole window
 		JPanel mainPanel = new JPanel();
@@ -122,6 +125,21 @@ public class ViewerWindow {
 			}
 		});
 		roundInfoPanel.add(saveButton);
+
+		JButton saveAllButton = new JButton(SAVE_ALL_BUTTON_NAME);
+		saveAllButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				JFileChooser fileChooser = new JFileChooser();
+				int userSelection = fileChooser.showSaveDialog(jFrame);
+
+				if (userSelection == JFileChooser.APPROVE_OPTION) {
+					File file = fileChooser.getSelectedFile();
+					saveSlicesHandler.accept(file);
+				}
+			}
+		});
+		roundInfoPanel.add(saveAllButton);
 
 		playerTypeLabel.setText(playerType);
 		playerTypeLabel.setOpaque(true);

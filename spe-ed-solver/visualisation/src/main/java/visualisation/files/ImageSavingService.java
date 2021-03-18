@@ -12,7 +12,12 @@ public class ImageSavingService {
 	private static final String DEFAULT_FILE_EXTENSION = "png";
 
 	public void saveImage(final File parent, final NamedImage image) throws ImageSavingException {
-		final File targetFile = new File(parent.toString() + "_" + image.getName() + "." + DEFAULT_FILE_EXTENSION);
+		saveImage(parent, image, "");
+	}
+
+	public void saveImage(final File parent, final NamedImage image, String appendix) throws ImageSavingException {
+		parent.mkdirs();
+		final File targetFile = new File(parent.toString() + "/" + image.getName() + appendix + "." + DEFAULT_FILE_EXTENSION);
 		try {
 			ImageIO.write(image.getImage(), DEFAULT_FILE_EXTENSION, targetFile);
 		} catch (final IOException e) {
